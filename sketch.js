@@ -1,9 +1,10 @@
 const flock = [];
 
-let alignScale, cohesionScale, separationScale;
+let l1, l2, l3
 let alignSlider, cohesionSlider, separationSlider;
 let maxSpeed;
-let perceptionRadius; //add in feature later to highlight the perception radius of a single boid (first in the flock) to see how it perceives
+let reset;
+let perceptionSlider; //add in feature later to highlight the perception radius of a single boid (first in the flock) to see how it perceives
 
 function setup() {
     createCanvas(640, 360);
@@ -11,18 +12,29 @@ function setup() {
     cohesionScale = 1;
     separationScale = 1;
 
-    createP('Alignment:');
-    alignSlider = createSlider(0, 2, 1, 0.1);
-    // alignSlider.position(width + 10, 10);
-    createP('Cohesion:');
-    cohesionSlider = createSlider(0, 2, 1, 0.1);
-    // cohesionSlider.position(width + 10, 40);
-    createP('Separation:');
+    l1 = createP('Separation:');
     separationSlider = createSlider(0, 2, 1, 0.1);
-    // separationSlider.position(width + 10, 70);
 
+    l2 = createP('Alignment:');
+    alignSlider = createSlider(0, 2, 1, 0.1);
+
+    l3 = createP('Cohesion:');
+    cohesionSlider = createSlider(0, 2, 1, 0.1);
+
+    createP('Perception Radius:');
+    perceptionSlider = createSlider(0, 150, 50, 5);
+
+    reset = createButton('Reset');
+    reset.mousePressed(resetBoids);
     maxSpeed = 4;
-    perceptionRadius = 50;
+    for (let i = 0; i < 100; i++) {
+        flock.push(new Boid());
+    }
+}
+
+// Reinitializes all boids while keeping the slider bar settings the same. 
+function resetBoids() {
+    flock.length = 0;
     for (let i = 0; i < 100; i++) {
         flock.push(new Boid());
     }
@@ -30,12 +42,20 @@ function setup() {
 
 function draw() {
     background(51);
-    stroke(100);
-
     for (let boid of flock) {
+        // for (let i = 0; i <flock.length; i++) {
         boid.walls();
         boid.flock(flock);
         boid.update();
         boid.show();
     }
+    let radar = flock[0];
+    // let c = color(255, 50, 0); // Define color 'c'
+    noFill(); // Use color variable 'c' as fill color
+    stroke(0, 0, 255);
+    strokeWeight(4);
+    circle(radar.position.x, radar.position.y, perceptionSlider.value());
+
+    // flock[0].Boid.position.x
+    // circle(flock[0].Boid.position.x, flock[0].Boid.position.y, perceptionSlider.value());
 }

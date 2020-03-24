@@ -38,7 +38,7 @@ class Boid {
             //let d = dist(this.position.x, this.position.y, other.position.x, other.position.y); //d = dist(this, boid)
             let d = sqrt(pow(min(abs(this.position.x - other.position.x), width - abs(this.position.x - other.position.x)), 2) + pow(min(abs(this.position.y - other.position.y), height - abs(this.position.y - other.position.y)), 2));
             //thanks to a youtube comment for the math to allow perception to wrap around the edges
-            if (other != this && d < perceptionRadius) {
+            if (other != this && d < perceptionSlider.value()) {
                 steer.add(other.velocity);
                 total++;
             }
@@ -47,7 +47,7 @@ class Boid {
             steer.div(total);
             steer.setMag(maxSpeed);
             steer.sub(this.velocity);
-            steer.setMag(this.maxForce); //Limit the ammount of force imparted by allignment affect
+            steer.limit(this.maxForce); //Limit the ammount of force imparted by allignment affect
         }
         return steer;
     }
@@ -61,7 +61,7 @@ class Boid {
 
 
     show() {
-        strokeWeight(9);
+        strokeWeight(6);
         stroke(255);
         point(this.position.x, this.position.y);
     }
