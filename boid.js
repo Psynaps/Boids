@@ -25,18 +25,21 @@ class Boid {
     }
 
     flock(boids) {
-        let allignment = this.allign(boids);
-        allignment.mult(allignScale); //allow for slider control of grouping factors
+        let allignment = this.align(boids);
+        allignment.mult(alignSlider.value()); //allow for slider control of grouping factors
+        // allignment.mult(alignScale); //allow for slider control of grouping factors
         this.acceleration.add(allignment);
     }
 
-    allign(boids) {
+    align(boids) {
         let steer = createVector();
         let total = 0;
-        for (let boid of boids) { //JS for each
-            let d = dist(this.position.x, this.position.y, boid.position.x, boid.position.y); //d = dist(this, boid)
-            if (boid != this && d < perceptionRadius) {
-                steer.add(boid.velocity);
+        for (let other of boids) { //JS for each
+            //let d = dist(this.position.x, this.position.y, other.position.x, other.position.y); //d = dist(this, boid)
+            let d = sqrt(pow(min(abs(this.position.x - other.position.x), width - abs(this.position.x - other.position.x)), 2) + pow(min(abs(this.position.y - other.position.y), height - abs(this.position.y - other.position.y)), 2));
+            //thanks to a youtube comment for the math to allow perception to wrap around the edges
+            if (other != this && d < perceptionRadius) {
+                steer.add(other.velocity);
                 total++;
             }
         }
@@ -58,7 +61,7 @@ class Boid {
 
 
     show() {
-        strokeWeight(16);
+        strokeWeight(9);
         stroke(255);
         point(this.position.x, this.position.y);
     }
