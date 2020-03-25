@@ -12,9 +12,13 @@ let alignSlider, cohesionSlider, separationSlider;
 let maxSpeed;
 let reset, showPerception;
 let perceptionSlider; // Allows for control over perception Raius
+let numBoids;
 
 function setup() {
-    createCanvas(640, 360);
+    createCanvas(800, 360);
+    // createCanvas(640, 500);
+    // frameRate(1);
+    noFill();
 
     l1 = createP('Separation:');
     separationSlider = createSlider(0, 2, 1, 0.1);
@@ -26,7 +30,7 @@ function setup() {
     cohesionSlider = createSlider(0, 2, 1, 0.1);
 
     createP('Perception Radius:');
-    perceptionSlider = createSlider(0, 150, 100, 5);
+    perceptionSlider = createSlider(0, 150, 75, 5);
 
     reset = createButton('Reset');
     reset.mousePressed(resetBoids);
@@ -34,7 +38,8 @@ function setup() {
     showPerception = createCheckbox('Show Perception', true);
     showPerception.changed(changePerception);
     maxSpeed = 4;
-    for (let i = 0; i < 100; i++) {
+    numBoids = 75;
+    for (let i = 0; i < numBoids; i++) {
         flock.push(new Boid());
     }
 }
@@ -42,7 +47,7 @@ function setup() {
 // Reinitializes all boids while keeping the slider bar settings the same. 
 function resetBoids() {
     flock.length = 0;
-    for (let i = 0; i < 100; i++) {
+    for (let i = 0; i < numBoids; i++) {
         flock.push(new Boid());
     }
 }

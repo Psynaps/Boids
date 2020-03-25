@@ -78,8 +78,8 @@ class Boid {
         let steer = createVector();
         let total = 0;
         for (let other of boids) {
-            let d = sqrt(pow(min(abs(this.position.x - other.position.x), width - abs(this.position.x - other.position.x)), 2) + pow(min(abs(this.position.y - other.position.y), height - abs(this.position.y - other.position.y)), 2));
-            // let d = dist(this.position.x, this.position.y, other.position.x, other.position.y); //d = dist(this, boid)
+            // let d = sqrt(pow(min(abs(this.position.x - other.position.x), width - abs(this.position.x - other.position.x)), 2) + pow(min(abs(this.position.y - other.position.y), height - abs(this.position.y - other.position.y)), 2));
+            let d = dist(this.position.x, this.position.y, other.position.x, other.position.y); //d = dist(this, boid)
             if (other != this && d < perceptionSlider.value()) {
                 let diff = p5.Vector.sub(this.position, other.position);
                 diff.div(d * d); // Separation force is inversely proportional to the distance to other boids, stronger than urge to cohere
@@ -121,8 +121,8 @@ class Boid {
         let steer = createVector();
         let m = createVector(mouseX, mouseY);
         steer = p5.Vector.sub(this.position, m);
-        if (steer.mag() < perceptionSlider.value() * 2 / 3) {
-            steer.setMag(maxSpeed * 2);
+        if (steer.mag() < perceptionSlider.value() * 2 / 3) { // perception radius for mouse avoidance is less than normal perception radius or else they  
+            steer.setMag(maxSpeed * 2); // all head towards the cursor then are repelled indefinitely
             steer.limit(this.maxForce * 3); //Limit the ammount of force imparted by avoidance
         } else {
             steer.setMag(0); //only avoid the object if it is within your perception radius
@@ -140,8 +140,17 @@ class Boid {
 
     //modify show to draw each boid their specified size, that way boid num 0 can just be drawn 
     show() {
-        strokeWeight(6);
+        strokeWeight(2);
         stroke(255);
-        point(this.position.x, this.position.y);
+        // point(this.position.x, this.position.y);
+        let len = 4;
+        let dir = this.velocity.heading()
+        console.log(dir);
+        console.log('cos: ' + cos(dir));
+
+        console.log(this.position.x + ', ' + this.position.y);
+        triangle(this.position.x + len * cos(dir), this.position.y + len * sin(dir), this.position.x + len * cos(dir + radians(140)), this.position.y + len * sin(dir + radians(140)), this.position.x + len * cos(dir - radians(140)), this.position.y + len * sin(dir - radians(140)));
+        stroke(50);
+        fill(50);
     }
 }
